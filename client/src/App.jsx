@@ -4,6 +4,8 @@ import { BrowserRouter,Routes,Route } from "react-router-dom";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import HomePage from "./pages/HomePage";
+import CreateAd from "./pages/CreateAd";
+import CreateSummary from "./pages/CreateSummary";
 function App() {
   return (
     <BrowserRouter>
@@ -12,6 +14,8 @@ function App() {
       <Route path="/home" element={<HomePage/>} />
       <Route path="/login" element={<SignIn/>} />
       <Route path="/signup" element={<SignUp/>} />
+      <Route path="/adv" element={<CreateAd />} />
+      <Route path="/summary" element={<CreateSummary />} />
     </Routes>
     </BrowserRouter>
   )
