@@ -4,6 +4,7 @@ const { Configuration, OpenAIApi } = require("openai");
 const { advertisementModel, summaryModel } = require("../models/serviceModal");
 
 dotenv.config();
+
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
