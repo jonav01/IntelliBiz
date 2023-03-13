@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const dotenv = require("dotenv");
 const { Configuration, OpenAIApi } = require("openai");
+const { advertisementModel, summaryModel } = require("../models/serviceModal");
 
 dotenv.config();
 const configuration = new Configuration({
@@ -8,6 +9,35 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
+// GET REQUESTS
+const getAd = asyncHandler(async (req, res) => {
+  try {
+    const allAdvertisements = await advertisementModel.find();
+    if (allAdvertisements) {
+      res.status(200).json(allAdvertisements);
+    } else {
+      res.status(400);
+      throw new Error("Couldn't find any advertisement");
+    }
+  } catch (err) {
+    console.log(err.statusCode);
+  }
+});
+const getSummary = asyncHandler(async (req, res) => {
+  try {
+    const allSummaries = await summaryModel.find();
+    if (allSummaries) {
+      res.status(200).json(allSummaries);
+    } else {
+      res.status(400);
+      throw new Error("Couldn't find any summary");
+    }
+  } catch (err) {
+    console.log(err.statusCode);
+  }
+});
+
+// POST REQUESTS
 const createAd = asyncHandler(async (req, res) => {
   const { prompt } = req.body;
   try {
@@ -20,8 +50,21 @@ const createAd = asyncHandler(async (req, res) => {
       frequency_penalty: 0.0,
       presence_penalty: 0.0,
     });
+    const data = response.data.choices[0].text.replaceAll("\n", "");
 
-    res.status(200).json({ data: response.data.choices[0].text });
+    if (data) {
+      try {
+        const advertisement = await advertisementModel.create({
+          data,
+        });
+        res.status(200).json(advertisement);
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      res.status(401);
+      throw new Error("API didn't send data");
+    }
   } catch (err) {
     console.log(err);
   }
@@ -29,20 +72,36 @@ const createAd = asyncHandler(async (req, res) => {
 
 const createSummary = asyncHandler(async (req, res) => {
   const { prompt } = req.body;
-  const response = await openai.createCompletion({
-    model: "text-davinci-003",
-    prompt: prompt,
-    temperature: 0,
-    max_tokens: 64,
-    top_p: 1.0,
-    frequency_penalty: 0.0,
-    presence_penalty: 0.0,
-  });
-
-  res.status(200).json({ data: response.data.choices[0].text });
+  try {
+    const response = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt: prompt,
+      temperature: 0,
+      max_tokens: 64,
+      top_p: 1.0,
+      frequency_penalty: 0.0,
+      presence_penalty: 0.0,
+    });
+    const data = response.data.choices[0].text.replaceAll("\n", "");
+    if (data) {
+      try {
+        const summary = await summaryModel.create({
+          data,
+        });
+        res.status(200).json(summary);
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      res.status(401);
+      throw new Error("API didn't send data");
+    }
+  } catch (err) {
+    console.log(err);
+  }
 });
 
-module.exports = { createAd, createSummary };
+module.exports = { getAd, getSummary, createAd, createSummary };
 
 // "Convert my short hand into a first-hand account of the meeting:\n\nTom:Profits up 50%\nJane: New servers are online\nKjel: Need more time to fix software\nJane:Happy to help\nParkman: Beta testing almost done"
 

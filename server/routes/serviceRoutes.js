@@ -1,9 +1,9 @@
 const express = require("express");
-const { createAd, createSummary } = require("../controllers/serviceController");
+const { getAd,createAd, createSummary, getSummary } = require("../controllers/serviceController");
 
 const router = express.Router();
 
-router.route("/createAd").post(createAd);
-router.route("/createSummary").post(createSummary);
+router.route("/Ad").get(getAd).post(createAd);
+router.route("/Summary").get(getSummary).post(createSummary);
 
 module.exports = router;
