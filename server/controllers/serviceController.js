@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const dotenv = require("dotenv");
 const { Configuration, OpenAIApi } = require("openai");
-const { advertisementModel, summaryModel } = require("../models/serviceModal");
+const { advertisementModel, summaryModel } = require("../models/serviceModel");
 
 dotenv.config();
 
@@ -13,7 +13,9 @@ const openai = new OpenAIApi(configuration);
 // GET REQUESTS
 const getAd = asyncHandler(async (req, res) => {
   try {
-    const allAdvertisements = await advertisementModel.find();
+    const allAdvertisements = await advertisementModel.find({
+      user_id: req.user._id,
+    });
     if (allAdvertisements) {
       res.status(200).json(allAdvertisements);
     } else {
@@ -26,7 +28,7 @@ const getAd = asyncHandler(async (req, res) => {
 });
 const getSummary = asyncHandler(async (req, res) => {
   try {
-    const allSummaries = await summaryModel.find();
+    const allSummaries = await summaryModel.find({ user_id: req.user._id });
     if (allSummaries) {
       res.status(200).json(allSummaries);
     } else {
@@ -56,6 +58,7 @@ const createAd = asyncHandler(async (req, res) => {
     if (data) {
       try {
         const advertisement = await advertisementModel.create({
+          user_id: req.user._id,
           data,
         });
         res.status(200).json(advertisement);
@@ -87,6 +90,7 @@ const createSummary = asyncHandler(async (req, res) => {
     if (data) {
       try {
         const summary = await summaryModel.create({
+          user_id: req.user._id,
           data,
         });
         res.status(200).json(summary);
