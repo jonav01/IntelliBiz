@@ -12,7 +12,7 @@ function CreateSummary() {
         "Content-Type": "application/json",
         Authentication: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify(summary),
+      body: JSON.stringify({ prompt: summary }),
     };
     const response = await fetch(
       "https://business-app.onrender.com/api/service/Summary",
@@ -23,7 +23,7 @@ function CreateSummary() {
     }
   };
   const handleAdvOnChange = (e) => {
-    setAdv(e.target.value);
+    setSummary(e.target.value);
   };
   const handlePromptSubmit = (e) => {
     e.preventDefault();

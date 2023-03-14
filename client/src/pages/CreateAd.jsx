@@ -5,17 +5,17 @@ function CreateAd() {
   const [adv, setAdv] = useState("");
   const [allAdvertisements, setallAdvertisement] = useState([]);
   const sendPrompt = async () => {
-    const accessToken = sessionStorage.getItem("userToken");
+    // const accessToken = sessionStorage.getItem("userToken");
     const options = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authentication: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${sessionStorage.getItem("userToken")}`,
       },
-      body: JSON.stringify(adv),
+      body: JSON.stringify({ prompt: adv }),
     };
     const response = await fetch(
-      "https://business-app.onrender.com/api/service/ad",
+      "http://localhost:8080/api/service/Ad",
       options
     );
     if (response.ok) {
@@ -47,7 +47,7 @@ function CreateAd() {
       }
     };
     fetchAds();
-  }, [allAdvertisements, sessionStorage.getItem("userToken")]);
+  }, [sessionStorage.getItem("userToken")]);
   return (
     <div>
       <Navbar />
