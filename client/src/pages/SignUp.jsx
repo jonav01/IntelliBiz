@@ -13,6 +13,37 @@ function SignUp() {
   const [verifyEmail, setVerifyEmail] = useState(true);
   const [verifyPassword, setVerifyPassword] = useState(true);
   const [verifyConfirmPassword, setverifyConfirmPassword] = useState(true);
+
+  //fetch API
+  const userSignUp = async () => {
+    if (
+      email &&
+      password &&
+      phone &&
+      name &&
+      verifyEmail &&
+      verifyPassword &&
+      verifyConfirmPassword &&
+      confirmPassword
+    ) {
+      const userData = { name, email, phone, password };
+      const response = await fetch(
+        "https://business-app.onrender.com/api/user/register",
+        {
+          method: "POST",
+          header: {
+            "Content-Type": "application/json",
+          },
+          body: userData,
+        }
+      );
+      if (response.ok) {
+        console.log(response);
+      }
+    } else {
+      return;
+    }
+  };
   //   On-change events
   const handleEmailOnChange = (e) => {
     setemail(e.target.value);
@@ -30,6 +61,7 @@ function SignUp() {
   };
   const handleConfirmPasswordChange = (e) => {
     setconfirmPassword(e.target.value);
+    setverifyConfirmPassword(true);
   };
 
   //   On-Blur events
@@ -40,25 +72,14 @@ function SignUp() {
     if (!password.length > 5) setVerifyPassword(false);
   };
   const handleConfirmPasswordOnBlur = () => {
-    if (password === confirmPassword) setverifyConfirmPassword(false);
+    if (password !== confirmPassword) {
+      setverifyConfirmPassword(false);
+    }
   };
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    if (
-      email &&
-      password &&
-      phone &&
-      name &&
-      verifyEmail &&
-      verifyPassword &&
-      verifyConfirmPassword &&
-      confirmPassword
-    ) {
-      console.log({ email, password });
-    } else {
-      return;
-    }
+    userSignUp();
   };
   return (
     <>
@@ -66,11 +87,11 @@ function SignUp() {
         <div className="w-full max-w-md space-y-8">
           <div>
             <Link to="/">
-            <img
-              className="mx-auto h-12 w-auto"
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-              alt="Your Company"
-            />
+              <img
+                className="mx-auto h-12 w-auto"
+                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                alt="Your Company"
+              />
             </Link>
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
               Register Here
@@ -169,7 +190,7 @@ function SignUp() {
             {!verifyEmail && (
               <p className="text-base text-red-700 mt-8">Enter a valid email</p>
             )}
-            {!verifyEmail && (
+            {!verifyPassword && (
               <p className="text-base text-red-700 mt-8">
                 Password should be of length greater than 5
               </p>
