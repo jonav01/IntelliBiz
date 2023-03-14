@@ -53,6 +53,7 @@ const createAd = asyncHandler(async (req, res) => {
       frequency_penalty: 0.0,
       presence_penalty: 0.0,
     });
+    console.log(response);
     const data = response.data.choices[0].text.replaceAll("\n", "");
 
     if (data) {
