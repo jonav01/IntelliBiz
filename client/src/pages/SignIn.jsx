@@ -1,12 +1,38 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function SignIn() {
+  const navigate = useNavigate();
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [verifyEmail, setVerifyEmail] = useState(true);
   const [verifyPassword, setVerifyPassword] = useState(true);
 
+  // Login
+  const userLogin = async () => {
+    if (email && password && verifyEmail && verifyPassword) {
+      const userData = { email, password };
+      const response = await fetch(
+        "https://business-app.onrender.com/api/user/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userData),
+        }
+      );
+      if (response.ok) {
+        response
+          .json()
+          .then((data) => sessionStorage.setItem("userToken", data.accessToken))
+          .catch((err) => console.log(err));
+        navigate("/home");
+      }
+    } else {
+      return;
+    }
+  };
   const handleEmailOnChange = (e) => {
     setemail(e.target.value);
     setVerifyEmail(true);
@@ -27,11 +53,7 @@ function SignIn() {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    if (email && password && verifyEmail && verifyPassword) {
-      console.log({ email, password });
-    } else {
-      return;
-    }
+    userLogin();
   };
   return (
     <>

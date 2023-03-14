@@ -31,10 +31,10 @@ function SignUp() {
         "https://business-app.onrender.com/api/user/register",
         {
           method: "POST",
-          header: {
+          headers: {
             "Content-Type": "application/json",
           },
-          body: userData,
+          body: JSON.stringify(userData),
         }
       );
       if (response.ok) {
