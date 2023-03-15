@@ -12,38 +12,21 @@ const openai = new OpenAIApi(configuration);
 
 // GET REQUESTS
 const getAd = asyncHandler(async (req, res) => {
-  try {
-    const allAdvertisements = await advertisementModel.find({
-      user_id: req.user._id,
-    });
-    if (allAdvertisements) {
-      res.status(200).json(allAdvertisements);
-    } else {
-      res.status(400);
-      throw new Error("Couldn't find any advertisement");
-    }
-  } catch (err) {
-    console.log(err.statusCode);
-  }
+  const allAdvertisements = await advertisementModel.find({
+    user_id: req.user._id,
+  });
+  res.status(200).json(allAdvertisements);
 });
+
 const getSummary = asyncHandler(async (req, res) => {
-  try {
-    const allSummaries = await summaryModel.find({ user_id: req.user._id });
-    if (allSummaries) {
-      res.status(200).json(allSummaries);
-    } else {
-      res.status(400);
-      throw new Error("Couldn't find any summary");
-    }
-  } catch (err) {
-    console.log(err.statusCode);
-  }
+  const allSummaries = await summaryModel.find({ user_id: req.user._id });
+  res.status(200).json(allSummaries);
 });
 
 // POST REQUESTS
 const createAd = asyncHandler(async (req, res) => {
   const { prompt } = req.body;
-  try {
+  if (prompt) {
     const response = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: prompt,
@@ -53,30 +36,26 @@ const createAd = asyncHandler(async (req, res) => {
       frequency_penalty: 0.0,
       presence_penalty: 0.0,
     });
-    const data = response.data.choices[0].text
-    console.log(data)
-    if (data) {
-      try {
-        const advertisement = await advertisementModel.create({
-          user_id: req.user._id,
-          data,
-        });
-        res.status(200).json(advertisement);
-      } catch (err) {
-        console.log(err);
-      }
-    } else {
-      res.status(401);
-      throw new Error("API didn't send data");
+    const data = response.data.choices[0].text;
+    try {
+      const advertisement = await advertisementModel.create({
+        user_id: req.user._id,
+        data,
+      });
+      res.status(200).json(advertisement);
+    } catch (err) {
+      res.status(500);
+      throw new Error("Cannot add to database");
     }
-  } catch (err) {
-    console.log(err);
+  } else {
+    res.status(404);
+    throw new Error("Please send a prompt");
   }
 });
 
 const createSummary = asyncHandler(async (req, res) => {
   const { prompt } = req.body;
-  try {
+  if (prompt) {
     const response = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: prompt,
@@ -86,23 +65,21 @@ const createSummary = asyncHandler(async (req, res) => {
       frequency_penalty: 0.0,
       presence_penalty: 0.0,
     });
-    const data = response.data.choices[0].text
-    if (data) {
-      try {
-        const summary = await summaryModel.create({
-          user_id: req.user._id,
-          data,
-        });
-        res.status(200).json(summary);
-      } catch (err) {
-        console.log(err);
-      }
-    } else {
-      res.status(401);
-      throw new Error("API didn't send data");
+    const data = response.data.choices[0].text;
+
+    try {
+      const summary = await summaryModel.create({
+        user_id: req.user._id,
+        data,
+      });
+      res.status(200).json(summary);
+    } catch (err) {
+      res.status(500);
+      throw new Error("Cannot add to databaase");
     }
-  } catch (err) {
-    console.log(err);
+  } else {
+    res.status(404);
+    throw new Error("Please pass on a prompt");
   }
 });
 

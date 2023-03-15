@@ -16,7 +16,7 @@ function CreateAd() {
     };
     try {
       const response = await fetch(
-        "http://localhost:8080/api/service/Ad",
+        "https://business-app.onrender.com/api/service/Ad",
         options
       );
       if (response.ok) {
@@ -68,7 +68,7 @@ function CreateAd() {
           return (
             <div className="bg-white p-2 mb-10 xl:p-10 lg:p-10 md:p-4 sm:p-2">
               <div key={key} className="p-2 text-lg">
-                {data.data}
+                {data.data.replaceAll("\n" , "")}
               </div>
             </div>
           );
