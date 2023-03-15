@@ -54,7 +54,6 @@ const createAd = asyncHandler(async (req, res) => {
       presence_penalty: 0.0,
     });
     const data = response.data.choices[0].text.replaceAll("\n", "");
-
     if (data) {
       try {
         const advertisement = await advertisementModel.create({
@@ -72,6 +71,35 @@ const createAd = asyncHandler(async (req, res) => {
   } catch (err) {
     console.log(err);
   }
+  // try {
+  //   const response = await openai.createCompletion({
+  //     model: "text-davinci-003",
+  //     prompt: prompt,
+  //     temperature: 0.5,
+  //     max_tokens: 100,
+  //     top_p: 1.0,
+  //     frequency_penalty: 0.0,
+  //     presence_penalty: 0.0,
+  //   });
+  //   const data = response.data.choices[0].text.replaceAll("\n", "");
+
+  //   if (data) {
+  //     try {
+  //       const advertisement = await advertisementModel.create({
+  //         user_id: req.user._id,
+  //         data,
+  //       });
+  //       res.status(200).json(advertisement);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   } else {
+  //     res.status(401);
+  //     throw new Error("API didn't send data");
+  //   }
+  // } catch (err) {
+  //   console.log(err);
+  // }
 });
 
 const createSummary = asyncHandler(async (req, res) => {

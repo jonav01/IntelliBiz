@@ -10,20 +10,27 @@ function CreateSummary() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authentication: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify(summary),
+      body: JSON.stringify({prompt : summary}),
     };
-    const response = await fetch(
-      "https://business-app.onrender.com/api/service/Summary",
-      options
-    );
-    if (response.ok) {
-      console.log(await response.json());
+    try{
+      const response = await fetch(
+        "http://localhost:8080/api/service/Summary",
+        options
+      );
+      if (response.ok) {
+        console.log(await response.json());
+      }else{
+        res.status(400)
+        throw new Error("Cannot create")
+      }
+    }catch(err){
+      console.log(err)
     }
   };
   const handleAdvOnChange = (e) => {
-    setAdv(e.target.value);
+    setSummary(e.target.value);
   };
   const handlePromptSubmit = (e) => {
     e.preventDefault();
@@ -47,7 +54,7 @@ function CreateSummary() {
       }
     };
     fetchAds();
-  }, [allSummaries, sessionStorage.getItem("userToken")]);
+  }, [sessionStorage.getItem("userToken")]);
   return (
     <div>
       <Navbar />

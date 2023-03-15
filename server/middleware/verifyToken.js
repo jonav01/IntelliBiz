@@ -6,8 +6,9 @@ const userModel = require("../models/userModel");
 const verifyToken = asyncHandler(async (req, res, next) => {
   let token;
   if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
+    (req.headers.authorization || req.headers.Authorization) &&
+    (req.headers.authorization.startsWith("Bearer") ||
+      req.headers.Authorization.startsWith("Bearer"))
   ) {
     try {
       token = req.headers.authorization.split(" ")[1];
