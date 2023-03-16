@@ -1,59 +1,27 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../components/Navbar";
 import TextArea from "../components/TextArea";
+import { createSummary, getSummary } from "../utilities/serviceSlice";
 function CreateSummary() {
   const [summary, setSummary] = useState("");
-  const [allSummaries, setallSummaries] = useState([]);
-  const sendPrompt = async () => {
-    const accessToken = sessionStorage.getItem("userToken");
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify({prompt : summary}),
-    };
-    try{
-      const response = await fetch(
-        "https://business-app.onrender.com/api/service/Summary",
-        options
-      );
-      if (response.ok) {
-        console.log(await response.json());
-      }else{
-        res.status(400)
-        throw new Error("Cannot create")
-      }
-    }catch(err){
-      console.log(err)
-    }
-  };
+
+  // redux states
+  const dispatch = useDispatch();
+  const summaries = useSelector((state) => state.service.summaries);
+  const status = useSelector((state) => state.service.status);
+  const error = useSelector((state) => state.service.error);
+
   const handleAdvOnChange = (e) => {
     setSummary(e.target.value);
   };
   const handlePromptSubmit = (e) => {
     e.preventDefault();
-    sendPrompt();
+    dispatch(createSummary(summary))
   };
 
   useEffect(() => {
-    const fetchAds = async () => {
-      const response = await fetch(
-        "https://business-app.onrender.com/api/service/Summary",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("userToken")}`,
-          },
-        }
-      );
-      if (response.ok) {
-        const allSummaries = await response.json();
-        setallSummaries(allSummaries);
-      }
-    };
-    fetchAds();
+    dispatch(getSummary());
   }, [sessionStorage.getItem("userToken")]);
   return (
     <div>
@@ -64,11 +32,18 @@ function CreateSummary() {
           onChange={handleAdvOnChange}
           onClick={handlePromptSubmit}
         />
-        {allSummaries.map((data, key) => {
+        {summaries.length === 0 && status === "succeded" && (
+          <h1 className="text-3xl bold py-4">No summary created !</h1>
+        )}
+        {summaries.length === 0 && status === "rejected" && (
+          <h1 className="text-3xl bold py-4 text-red-600">{error}</h1>
+        )}
+        {status === "loading" && <p className="text-xl py-4">Loading ...</p>}
+        {summaries.map((data, key) => {
           return (
             <div className="bg-white p-2 mb-10 xl:p-10 lg:p-10 md:p-4 sm:p-2">
               <div key={key} className="p-2 text-lg">
-                {data.data.replaceAll("\n" , "")}
+                {data.data.replaceAll("\n", "")}
               </div>
             </div>
           );
