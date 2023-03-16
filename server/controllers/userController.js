@@ -18,7 +18,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   const checkUserExists = await userModel.findOne({ email });
   if (checkUserExists) {
-    res.status(400);
+    res.status(403);
     throw new Error("This email is already in use !");
   } else {
     const encryptPassword = await bcrypt.hash(password, 10);

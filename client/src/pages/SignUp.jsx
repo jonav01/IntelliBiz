@@ -1,7 +1,14 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { userRegister } from "../utilities/userSlice";
 
 function SignUp() {
+  // redux states
+  const status = useSelector((state) => state.user.status);
+  const err = useSelector((state) => state.user.error);
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
   // Form states
   const [name, setname] = useState("");
   const [phone, setPhone] = useState("");
@@ -14,36 +21,6 @@ function SignUp() {
   const [verifyPassword, setVerifyPassword] = useState(true);
   const [verifyConfirmPassword, setverifyConfirmPassword] = useState(true);
 
-  //fetch API
-  const userSignUp = async () => {
-    if (
-      email &&
-      password &&
-      phone &&
-      name &&
-      verifyEmail &&
-      verifyPassword &&
-      verifyConfirmPassword &&
-      confirmPassword
-    ) {
-      const userData = { name, email, phone, password };
-      const response = await fetch(
-        "https://business-app.onrender.com/api/user/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(userData),
-        }
-      );
-      if (response.ok) {
-        console.log(response);
-      }
-    } else {
-      return;
-    }
-  };
   //   On-change events
   const handleEmailOnChange = (e) => {
     setemail(e.target.value);
@@ -79,8 +56,22 @@ function SignUp() {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    userSignUp();
+    if (!name || !phone || !password || !confirmPassword || !email) {
+      return;
+    } else {
+      dispatch(userRegister({ name, phone, email, password }));
+    }
   };
+
+  useEffect(() => {
+    if (sessionStorage.getItem("userToken")) {
+      navigate("/home");
+    }
+    if (status === "succeeded") {
+      navigate("/login");
+    }
+  }, [status]);
+
   return (
     <>
       <div className="flex min-h-full items-center justify-center py-32 px-4 sm:px-6 lg:px-8">
@@ -201,12 +192,37 @@ function SignUp() {
               </p>
             )}
             <div>
-              <button
-                type="submit"
-                className="group relative flex w-full justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Sign Up
-              </button>
+              {!verifyEmail && (
+                <p className="text-base text-red-700 mt-8">
+                  Enter a valid email
+                </p>
+              )}
+              {!verifyPassword && (
+                <p className="text-base text-red-700 mt-8">
+                  Password should be of length greater than 5
+                </p>
+              )}
+              {!verifyConfirmPassword && (
+                <p className="text-base text-red-700 mt-8">
+                  Retype password correctly
+                </p>
+              )}
+              {status==='rejected' && (
+                <p className="text-base text-red-700 mt-8">
+                  {err}
+                </p>
+              )}
+
+              {status === "loading" ? (
+                <p>Loading</p>
+              ) : (
+                <button
+                  type="submit"
+                  className="group relative flex w-full justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  Sign Up
+                </button>
+              )}
             </div>
           </form>
         </div>

@@ -1,60 +1,63 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-
+import { userLogin } from "../utilities/userSlice";
 function SignIn() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  
+  // redux states
+  const status = useSelector((state) => state.user.status);
+  const accessToken = useSelector((state) => state.user.accessToken);
+  const error = useSelector((state) => state.user.error)
+  
+  // use-states
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [verifyEmail, setVerifyEmail] = useState(true);
   const [verifyPassword, setVerifyPassword] = useState(true);
 
-  // Login
-  const userLogin = async () => {
-    if (email && password && verifyEmail && verifyPassword) {
-      const userData = { email, password };
-      const response = await fetch(
-        "https://business-app.onrender.com/api/user/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(userData),
-        }
-      );
-      if (response.ok) {
-        response
-          .json()
-          .then((data) => sessionStorage.setItem("userToken", data.accessToken))
-          .catch((err) => console.log(err));
-        navigate("/home");
-      }
-    } else {
-      return;
-    }
-  };
+  // on change handlers
   const handleEmailOnChange = (e) => {
     setemail(e.target.value);
     setVerifyEmail(true);
   };
-
   const handlePasswordChange = (e) => {
     setpassword(e.target.value);
     setVerifyPassword(true);
   };
 
+  // on blur events
   const handleEmailOnBlur = () => {
     if (!email.includes("@")) setVerifyEmail(false);
   };
-
   const handlePasswordOnBlur = () => {
     if (!password.length > 5) setVerifyPassword(false);
   };
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    userLogin();
+    if (!email || !password) {
+      setVerifyEmail(false);
+      setVerifyPassword(false);
+    } else {
+      setVerifyEmail(true);
+      setVerifyPassword(true);
+      dispatch(userLogin({ email, password }));
+    }
   };
+
+  useEffect(() => {
+    if (sessionStorage.getItem("userToken")) {
+      navigate("/home");
+    }
+    if (status === "succeeded") {
+      console.log(accessToken.accessToken)
+      sessionStorage.setItem("userToken", accessToken.accessToken);
+      navigate("/home");
+    }
+  }, [status]);
+
   return (
     <>
       <div
@@ -132,12 +135,16 @@ function SignIn() {
               </p>
             )}
             <div>
-              <button
-                type="submit"
-                className="group relative flex w-full justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Sign in
-              </button>
+              {status === "loading" ? (
+                <p>Loading ...</p>
+              ) : (
+                <button
+                  type="submit"
+                  className="group relative flex w-full justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  Sign in
+                </button>
+              )}
             </div>
           </form>
         </div>
