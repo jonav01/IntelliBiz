@@ -6,12 +6,16 @@ const serviceSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: true,
     },
+    heading:{
+      type: String,
+      required: true,
+    },
     data: {
       type: String,
       required: true,
     },
   },
-  { timeStamps: true }
+  { timestamps: true }
 );
 
 const advertisementModel = mongoose.model("Advertisement", serviceSchema);

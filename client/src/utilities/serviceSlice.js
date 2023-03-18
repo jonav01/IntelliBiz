@@ -93,7 +93,7 @@ export const getSummary = createAsyncThunk(
     );
     if (response.ok) {
       const allSummaries = await response.json();
-      return allSummaries;
+      return allSummaries.reverse();
     }
   }
 );

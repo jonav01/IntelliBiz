@@ -14,12 +14,14 @@ const openai = new OpenAIApi(configuration);
 const getAd = asyncHandler(async (req, res) => {
   const allAdvertisements = await advertisementModel.find({
     user_id: req.user._id,
-  });
+  }).sort({ "createdAt": -1 });
   res.status(200).json(allAdvertisements);
 });
 
 const getSummary = asyncHandler(async (req, res) => {
-  const allSummaries = await summaryModel.find({ user_id: req.user._id });
+  const allSummaries = await summaryModel
+    .find({ user_id: req.user._id })
+    .sort({ "createdAt": -1 });
   res.status(200).json(allSummaries);
 });
 
@@ -40,6 +42,7 @@ const createAd = asyncHandler(async (req, res) => {
     try {
       const advertisement = await advertisementModel.create({
         user_id: req.user._id,
+        heading: prompt,
         data,
       });
       res.status(200).json(advertisement);
@@ -70,6 +73,7 @@ const createSummary = asyncHandler(async (req, res) => {
     try {
       const summary = await summaryModel.create({
         user_id: req.user._id,
+        heading: prompt,
         data,
       });
       res.status(200).json(summary);
