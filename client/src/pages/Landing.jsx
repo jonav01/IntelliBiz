@@ -1,8 +1,8 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { features } from "../constants/features";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const navigation = [
   { name: "Product", href: "#" },
   { name: "Features", href: "#" },
@@ -12,6 +12,12 @@ const navigation = [
 
 export default function Landing() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (sessionStorage.getItem("userToken")) {
+      navigate("/home");
+    }
+  }, []);
 
   return (
     <Fragment>

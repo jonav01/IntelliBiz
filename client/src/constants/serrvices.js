@@ -11,7 +11,7 @@ export const services = [
     },
     {
         heading: "Advertisement",
-        description: 'Use AI for this and that',
-        link:"/abcd"
+        description: 'This feature is currently being build',
+        link:"/"
     }
 ]
