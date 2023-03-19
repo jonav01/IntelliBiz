@@ -8,6 +8,7 @@ import { createAd, getAd } from "../utilities/serviceSlice";
 
 function CreateAd() {
   const [adv, setAdv] = useState("");
+  const dummyArray = [];
   const navigate = useNavigate();
 
   // redux states
@@ -22,11 +23,14 @@ function CreateAd() {
   };
   const handlePromptSubmit = (e) => {
     e.preventDefault();
-    dispatch(createAd(adv));    
+    dispatch(createAd(adv));
+    dispatch(getAd());
   };
 
   useEffect(() => {
     dispatch(getAd());
+    dummyArray.push(advertisements);
+    console.log(dummyArray);
     if (!accessToken) {
       navigate("/");
     }
@@ -51,10 +55,15 @@ function CreateAd() {
           return (
             <div className="bg-white p-2 mb-10 xl:p-10 lg:p-10 md:p-4 sm:p-2">
               <h1 className="py-10 text-4xl ">{data.heading}</h1>
-              <div key={key} className="text-lg">
+              <div
+                key={key}
+                className="text-base xl:text-lg md:text-lg sm:text-base"
+              >
                 {data.data.replaceAll("\n", "")}
               </div>
-              <span className="mt-10 text-lg">{data.createdAt.substring(0,10)}</span>
+              <span className="mt-10 text-base xl:text-lg md:text-lg">
+                {data.createdAt.substring(0, 10)}
+              </span>
             </div>
           );
         })}

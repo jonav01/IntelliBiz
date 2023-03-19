@@ -1,21 +1,21 @@
 import { ArrowPathIcon, CloudArrowUpIcon, FingerPrintIcon, LockClosedIcon } from '@heroicons/react/24/outline'
 export const features = [
     {
-        name: 'Push to deploy',
+        name: 'Create advertisements',
         description:
-          'Morbi viverra dui mi arcu sed. Tellus semper adipiscing suspendisse semper morbi. Odio urna massa nunc massa.',
+          'Our website is powered by openAIs powerful language processing tool. Write your prompt and submit to get refined advertisement campaigns for your product.',
         icon: CloudArrowUpIcon,
       },
       {
-        name: 'SSL certificates',
+        name: 'Create summaries',
         description:
-          'Sit quis amet rutrum tellus ullamcorper ultricies libero dolor eget. Sem sodales gravida quam turpis enim lacus amet.',
+          'Our website is powered by openAIs powerful language processing tool. Write your prompt and submit to create detailed summaries out of your notes.',
         icon: LockClosedIcon,
       },
       {
-        name: 'Simple queues',
+        name: 'Calendar',
         description:
-          'Quisque est vel vulputate cursus. Risus proin diam nunc commodo. Lobortis auctor congue commodo diam neque.',
+          'This is a feature in development.',
         icon: ArrowPathIcon,
       },
       {

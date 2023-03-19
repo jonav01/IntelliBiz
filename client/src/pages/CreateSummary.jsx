@@ -49,7 +49,7 @@ function CreateSummary() {
         {summaries.map((data, key) => {
           return (
             <div className="bg-white p-2 mb-10 xl:p-10 lg:p-10 md:p-4 sm:p-2">
-              <h1 className="py-10 text-4xl ">{data.heading}</h1>
+              <h1 className="py-10 text-4xl">{data.heading}</h1>
               <div key={key} className="text-lg">
                 {data.data.replaceAll("\n", "")}
               </div>

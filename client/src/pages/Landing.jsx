@@ -143,12 +143,11 @@ export default function Landing() {
           <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
             <div className="text-center">
               <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-                Services by and for your online business
+                Innovative software for modern businesses.
               </h1>
               <p className="mt-6 text-lg leading-8 text-gray-600">
-                Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui
-                lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat
-                fugiat aliqua.
+                Empowering your digital journey with innovative software
+                solutions - Experience the future of technology with us.
               </p>
               <div className="mt-10 flex items-center justify-center gap-x-6">
                 <Link
@@ -197,9 +196,10 @@ export default function Landing() {
               Everything you need to deploy your app
             </p>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              Quis tellus eget adipiscing convallis sit sit eget aliquet quis.
-              Suspendisse eget egestas a elementum pulvinar et feugiat blandit
-              at. In mi viverra elit nunc.
+              We offer a wide range of services to meet the needs of individuals
+              and businesses alike. Our services are designed to help you
+              achieve your goals and streamline your processes. Here are some of
+              the services we offer:
             </p>
           </div>
           <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">

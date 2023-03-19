@@ -27,7 +27,8 @@ export const createAd = createAsyncThunk(
       options
     );
     if (response.ok) {
-      console.log(await response.json());
+      const responseData = await response.json();
+      return responseData;
     } else {
       res.status(400);
       throw new Error("Cannot fetch");
@@ -109,6 +110,7 @@ export const serviceSlice = createSlice({
       })
       .addCase(createAd.fulfilled, (state, action) => {
         state.status = "succeded";
+        state.advertisements = [action.payload, ...state.advertisements];
       })
       .addCase(createAd.rejected, (state, action) => {
         state.status = "rejected";
@@ -119,6 +121,7 @@ export const serviceSlice = createSlice({
       })
       .addCase(createSummary.fulfilled, (state, action) => {
         state.status = "succeded";
+        state.summaries = [action.payload, ...state.summaries];
       })
       .addCase(createSummary.rejected, (state, action) => {
         state.status = "rejected";
