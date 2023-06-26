@@ -1,2 +1,2 @@
-# PlatePal
-Social media by and for the recipes
+# IntelliBiz
+Your business helper.
